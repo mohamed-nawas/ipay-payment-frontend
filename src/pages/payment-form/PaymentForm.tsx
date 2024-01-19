@@ -194,7 +194,7 @@ const PaymentForm: React.FC<{}> = () => {
 
       {/* <form method="POST" action="https://sandbox.ipay.lk/ipg/checkout">
         <input placeholder="token" name="merchantWebToken" value="eyJhbGciOiJIUzUxMiJ9.eyJtaWQiOiIwMDAwMDE3MyJ9.O4HEoHZs3GLrCdlBVSgW_Lkvp6ESzOhXemIVnvQCZvnQBGA2WnOnUyQ4hVyLSkQZHY3cxHK-3EkOodGg01kzWg" />
-        <input placeholder="orderId" name="orderId" value="OID41ecffe6-05e2-4bc6-9f50-a28d3e225fa7" />
+        <input placeholder="orderId" name="orderId" value="OID910ef5c8-2f18-47cc-85dd-c0e767d8df91" />
         <input placeholder="description" name="orderDescription" value={state.orderDescription}
           onChange={(e) =>
             dispatch((prevState) => ({
@@ -202,8 +202,8 @@ const PaymentForm: React.FC<{}> = () => {
               orderDescription: e.target.value,
             }))
           } />
-        <input placeholder="returnUrl" name="returnUrl" value="http://localhost:3000/return?orderId=OID41ecffe6-05e2-4bc6-9f50-a28d3e225fa7" />
-        <input placeholder="cancelUrl" name="cancelUrl" value="http://localhost:3000/cancel?orderId=OID41ecffe6-05e2-4bc6-9f50-a28d3e225fa7" />
+        <input placeholder="returnUrl" name="returnUrl" value="http://localhost:3000/return?orderId=OID910ef5c8-2f18-47cc-85dd-c0e767d8df91" />
+        <input placeholder="cancelUrl" name="cancelUrl" value="http://localhost:3000/cancel?orderId=OID910ef5c8-2f18-47cc-85dd-c0e767d8df91" />
         <input placeholder="amount" name="totalAmount" value={state.totalAmount}
           onChange={(e) =>
             dispatch((prevState) => ({
