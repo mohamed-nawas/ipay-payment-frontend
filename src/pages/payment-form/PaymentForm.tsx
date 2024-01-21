@@ -15,27 +15,37 @@ const PaymentForm: React.FC<{}> = () => {
     customerPhone: "",
     customerEmail: "",
   });
+  const [error, setError] = React.useState<string>("");
+
+  const isValidRequest = (): boolean => {
+    return state.orderDescription.length < 128;
+  }
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    apis.createOrder({
-      customerName: state.customerName,
-      customerEmail: state.customerEmail,
-      customerPhone: state.customerPhone,
-      orderDescription: state.orderDescription,
-      totalAmount: parseFloat(state.totalAmount),
-    }).then(response => {
-      const { merchantWebToken, orderId, returnUrl, cancelUrl } = response.data.data;
-      if (formSubmitInputRef.current && hiddenTokenInputRef.current && hiddenOrderIdInputRef.current && hiddenReturnUrlInputRef.current
-        && hiddenCancelUrlInputRef.current) {
-        hiddenTokenInputRef.current.value = merchantWebToken;
-        hiddenOrderIdInputRef.current.value = orderId;
-        hiddenReturnUrlInputRef.current.value = returnUrl;
-        hiddenCancelUrlInputRef.current.value = cancelUrl;
+    if (!isValidRequest()) {
+      setError("Form validation error occurred, maximum allowed description legth is 128 characters");
+    } else {
+      apis.createOrder({
+        customerName: state.customerName,
+        customerEmail: state.customerEmail,
+        customerPhone: state.customerPhone,
+        orderDescription: state.orderDescription,
+        totalAmount: parseFloat(state.totalAmount),
+      }).then(response => {
+        const { merchantWebToken, orderId, returnUrl, cancelUrl } = response.data.data;
+        if (formSubmitInputRef.current && hiddenTokenInputRef.current && hiddenOrderIdInputRef.current && hiddenReturnUrlInputRef.current
+          && hiddenCancelUrlInputRef.current) {
+          hiddenTokenInputRef.current.value = merchantWebToken;
+          hiddenOrderIdInputRef.current.value = orderId;
+          hiddenReturnUrlInputRef.current.value = returnUrl;
+          hiddenCancelUrlInputRef.current.value = cancelUrl;
 
-        formSubmitInputRef.current.click();
-      }
-    });
+          if (isValidRequest())
+            formSubmitInputRef.current.click();
+        }
+      });
+    }
   }
 
   return (
@@ -165,6 +175,8 @@ const PaymentForm: React.FC<{}> = () => {
                 ></textarea>
               </div>
 
+              {error ? <p className="text-red-500">{error}</p> : null}
+
               <div className="mt-4">
                 <button
                   type="submit"
@@ -179,7 +191,7 @@ const PaymentForm: React.FC<{}> = () => {
         </div>
       </div>
 
-      <form method="POST" action="https://sandbox.ipay.lk/ipg/checkout">
+      <form hidden method="POST" action="https://sandbox.ipay.lk/ipg/checkout">
         <input ref={hiddenTokenInputRef} name="merchantWebToken" />
         <input ref={hiddenOrderIdInputRef} name="orderId" />
         <input name="orderDescription" value={state.orderDescription} />
@@ -191,50 +203,6 @@ const PaymentForm: React.FC<{}> = () => {
         <input name="customerPhone" value={state.customerPhone} />
         <input ref={formSubmitInputRef} type="submit" value="Checkout Now" />
       </form>
-
-      {/* <form method="POST" action="https://sandbox.ipay.lk/ipg/checkout">
-        <input placeholder="token" name="merchantWebToken" value="eyJhbGciOiJIUzUxMiJ9.eyJtaWQiOiIwMDAwMDE3MyJ9.O4HEoHZs3GLrCdlBVSgW_Lkvp6ESzOhXemIVnvQCZvnQBGA2WnOnUyQ4hVyLSkQZHY3cxHK-3EkOodGg01kzWg" />
-        <input placeholder="orderId" name="orderId" value="OID910ef5c8-2f18-47cc-85dd-c0e767d8df91" />
-        <input placeholder="description" name="orderDescription" value={state.orderDescription}
-          onChange={(e) =>
-            dispatch((prevState) => ({
-              ...prevState,
-              orderDescription: e.target.value,
-            }))
-          } />
-        <input placeholder="returnUrl" name="returnUrl" value="http://localhost:3000/return?orderId=OID910ef5c8-2f18-47cc-85dd-c0e767d8df91" />
-        <input placeholder="cancelUrl" name="cancelUrl" value="http://localhost:3000/cancel?orderId=OID910ef5c8-2f18-47cc-85dd-c0e767d8df91" />
-        <input placeholder="amount" name="totalAmount" value={state.totalAmount}
-          onChange={(e) =>
-            dispatch((prevState) => ({
-              ...prevState,
-              totalAmount: e.target.value,
-            }))
-          } />
-        <input placeholder="name" name="customerName" value={state.customerName}
-          onChange={(e) =>
-            dispatch((prevState) => ({
-              ...prevState,
-              customerName: e.target.value,
-            }))
-          } />
-        <input placeholder="email" name="customerEmail" value={state.customerEmail}
-          onChange={(e) =>
-            dispatch((prevState) => ({
-              ...prevState,
-              customerEmail: e.target.value,
-            }))
-          } />
-        <input placeholder="phone" name="customerPhone" value={state.customerPhone}
-          onChange={(e) =>
-            dispatch((prevState) => ({
-              ...prevState,
-              customerPhone: e.target.value,
-            }))
-          } />
-          <input type="submit" value="Checkout Now" />
-      </form> */}
-
     </section>
   );
 }
